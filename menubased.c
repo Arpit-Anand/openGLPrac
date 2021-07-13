@@ -2,7 +2,7 @@
 #include <string.h>
 #include<GL/glut.h>
 #include <stdlib.h>
-int pat = 0;
+int pat = 0, scan = 1;
 int submenu;
 float x1,y1,x2,y2,x3,y3,x4,y4;
 
@@ -77,7 +77,8 @@ void display(){
     glVertex2f(x4,y4);
     glEnd();
     render(20,5,"1BI18CS026");
-    scanfill(x1,y1,x2,y2,x3,y3,x4,y4);
+    if(scan)
+      scanfill(x1,y1,x2,y2,x3,y3,x4,y4);
     glFlush();
   }
   else{
@@ -160,7 +161,7 @@ void display(){
 }
 
 void init(){
-  glClearColor(0.0,0.0,0.0,1.0);
+  glClearColor(1.0,1.0,1.0,1.0);
   glColor3f(0.6,1.0,0.3);
   glPointSize(1.0);
   glMatrixMode(GL_PROJECTION);
@@ -172,10 +173,13 @@ void init(){
 void menufunc(int n){
   switch (n) {
     case 1: glColor3f(1.0,0.0,0.0);
+            scan = 1;
             break;
     case 2 :glColor3f(0.2,0.4,0.6);
+            scan = 1;
             break;
     case 3 : glColor3f(0.6,0.2,0.4);
+            scan = 1;
             break;
     case 4 : pat = 1;
             break;
@@ -184,6 +188,16 @@ void menufunc(int n){
     case 6 : pat = 3;
             break;
     case 7: exit(0);
+            break;
+    case 8: glColor3f(1.0,0.0,0.0);
+            scan = 0;
+            break;
+    case 9: glColor3f(0.0,1.0,1.0);
+            scan = 0;
+            break;
+    case 10:glColor3f(1.0,1.0,0.0);
+            scan = 0;
+            break;
   }
   glutPostRedisplay();
 }
@@ -194,7 +208,7 @@ void reshape(int w, int h){
   gluOrtho2D (0.0, (GLdouble) w, 0.0, (GLdouble) h);
 }
 int main(int argc, char **argv) {
-  printf("Enter the four edges of rhombus\n");
+  printf("Enter the four edges of Quadrangle\n");
   printf("First edge(x,y) \t");
   scanf("%f%f",&x1,&y1);
   printf("Second edge(x,y) \t");
@@ -216,9 +230,14 @@ int main(int argc, char **argv) {
   glutAddMenuEntry("Pattern 1", 4);
   glutAddMenuEntry("Pattern 2", 5);
   glutAddMenuEntry("Pattern 3", 6);
+  int sub3 = glutCreateMenu(menufunc);
+  glutAddMenuEntry("Red", 8);
+  glutAddMenuEntry("Cyan", 9);
+  glutAddMenuEntry("Yellow", 10);
   glutCreateMenu(menufunc);
   glutAddSubMenu("Colors", sub1);
   glutAddSubMenu("Patterns", sub2);
+  glutAddSubMenu("Hollow", sub3);
   glutAddMenuEntry("Exit", 7);
   glutAttachMenu(GLUT_RIGHT_BUTTON);
   glutDisplayFunc(display);
@@ -227,3 +246,4 @@ int main(int argc, char **argv) {
   glutMainLoop();
   return 0;
 }
+
